@@ -23,14 +23,16 @@ button: {
     backgroundColor: BG_BUTTON,
     borderRadius: 2,
     marginHorizontal: 80,
-    paddingVertical: 7
-
+    paddingVertical: 8,
+    alignItems: "center",
+    
 },
 
 title: {
     color: TEXT_PRIMARY,
-    alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    fontWeight: "700",
+    fontSize: 17
 }
 
 
