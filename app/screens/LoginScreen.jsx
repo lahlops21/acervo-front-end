@@ -1,5 +1,5 @@
-import { ScrollView, StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import {SafeAreaView} from "react-native-safe-area-context";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import ButtonForm from "../components/ButtonForm";
 
 
@@ -7,7 +7,11 @@ export default function LoginScreen() {
 
 return(
      <SafeAreaView style = {styles.safeArea}>
-        <ScrollView>
+        <ScrollView style = {styles.scrollView}>
+            <Image
+            source ={require("../assets/images/logo.png")}
+            style = {styles.logo}
+            />
             <View style = {styles.form}>
                 <ButtonForm
                 textButton= "Login"
@@ -33,6 +37,11 @@ return(
 
 const styles = StyleSheet.create({
 
+    safeArea: {
+        backgroundColor: "#fff",
+        flex:1
+    },
+    
     registerButton: {
         backgroundColor: "#D0EFF9",
         borderRadius: 2,
@@ -63,8 +72,14 @@ const styles = StyleSheet.create({
         textDecorationLine: "underline",
         marginTop: 28,
         textAlign: "center"
-    }
+    },
 
+    logo:{
+        height: 284,
+        width:240,
+        alignSelf: "center", // centraliza a imagem dentro do conteiner
+        marginBottom:62
+    }
 
 
 })
