@@ -1,85 +1,70 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ButtonForm from "../components/ButtonForm";
+import LabeledInput from "../components/LabeledInput";
 
 
-export default function LoginScreen() {
 
-return(
-     <SafeAreaView style = {styles.safeArea}>
-        <ScrollView style = {styles.scrollView}>
-            <Image
-            source ={require("../assets/images/logo.png")}
-            style = {styles.logo}
-            />
-            <View style = {styles.form}>
-                <ButtonForm
-                textButton= "Login"
-                
+
+export default function LoginScreen(){
+    return(
+       <SafeAreaView style = {styles.safeArea}>
+            <ScrollView>
+                <Image
+                source ={require("../assets/images/logo1.png")}
+                style = {styles.logo}
                 />
-                <View style = {styles.registerButton}>
-                    <Text style = {styles.title}>Cadastrar</Text>
+                
+                <View style = {styles.form}>
+                <LabeledInput 
+                label = "Email"               
+                />
+                <LabeledInput
+                label = "Senha"               
+                />
+                
                 </View>
+                <ButtonForm
+                textButton= "Entrar"
+                />
+                <Text style = {styles.title}>Não tem cadastro? </Text>
 
-                <TouchableOpacity>
-                    <Text style = {styles.noLogin}>Entrar sem login</Text>
-                </TouchableOpacity>
-
-            </View>
-            
-        </ScrollView>
-     </SafeAreaView>
-
-)
-
-
+            </ScrollView>    
+       </SafeAreaView>
+    )
 }
 
 const styles = StyleSheet.create({
 
-    safeArea: {
-        backgroundColor: "#fff",
-        flex:1
-    },
     
-    registerButton: {
-        backgroundColor: "#D0EFF9",
-        borderRadius: 2,
-        marginHorizontal: 80,
-        paddingVertical: 7,
-        alignItems: "center",
-        marginTop: 13,
-        borderColor: "#0883A9",
-        borderWidth: 1
-
-    },
-
-    title: {
-        color: "#0883A9",
-        marginVertical: 2,
-        alignItems: "center",
-        textAlign: "center",
-        paddingVertical: 6,
-        fontWeight:"700",
-        fontSize: 17,
+    form: {
+        width: "100%",
+        paddingHorizontal:75,
+        
         
     },
 
-    noLogin: {
-        color: "#0883A9",
-        fontSize: 13,
-        fontWeight: "700", // pode usar "semi-bold" ou sem aspas. Mas é melhor usar assim. 
-        textDecorationLine: "underline",
-        marginTop: 28,
-        textAlign: "center"
-    },
+        title: {
+        fontSize: 15,
+        fontWeight:"700",
+        textAlign: "center",
+        color: "#6b6e71",
+        paddingTop:16,
+        marginBottom: 26
+        },
 
-    logo:{
-        height: 284,
-        width:240,
+        logo:{
+        height: 124,
+        width:150,
         alignSelf: "center", // centraliza a imagem dentro do conteiner
-        marginBottom:62
+        marginBottom:74
+    },
+    
+    safeArea : {
+        flex:1,
+        backgroundColor: "#fff",
+        paddingTop: 47
     }
 
 
-})
+})   
