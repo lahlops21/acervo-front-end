@@ -22,15 +22,19 @@ const styles = StyleSheet.create({
 button: {
     backgroundColor: BG_BUTTON,
     borderRadius: 2,
-    marginHorizontal: 80,
-    paddingVertical: 8,
-    alignItems: "center",
+    marginHorizontal: 70,
+    paddingVertical: 7,
+    // alignItems: "center",
+    // justifyContent: "center",
+    // width:211,
+    // height: 54
     
 },
 
 title: {
     color: TEXT_PRIMARY,
     justifyContent: "center",
+    textAlign: "center",
     fontWeight: "700",
     fontSize: 17
 }
