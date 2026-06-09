@@ -1,7 +1,7 @@
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 
-export default function ProfileAvatar({isLogged, inicials, onPress}){
+export default function ProfileAvatar({isLogged, initials, onPress}){
 return (
 
     <TouchableOpacity onPress={onPress} styles = {styles.container}>

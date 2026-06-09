@@ -3,9 +3,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ButtonForm from "../components/ButtonForm";
 import LabeledInput from "../components/LabeledInput";
 
-
-
-
 export default function LoginScreen(){
     return(
        <SafeAreaView style = {styles.safeArea}>
