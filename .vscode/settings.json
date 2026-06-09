@@ -1,7 +1,19 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit",
-    "source.sortMembers": "explicit"
+  "files.exclude": {
+    "**/.git": true,
+    "**/.gitignore": true,
+    "**/node_modules": true,
+    "**/app-example": true,
+    "**/AGENTS.md": true,
+    "**/CLAUDE.md": true,
+    "**/README.md": true,
+    "**/assets": false,
+    "**/app.json": true,
+    "**/eslint.config.js": true,
+    "**/tsconfig.json": true,
+    "**/package-lock.json": true,
+    "**/.claude": true,
+    "**/.expo": true,
+    "**/expo-env.d.ts": true
   }
 }
