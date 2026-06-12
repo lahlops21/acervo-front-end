@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet } from 'react-native';
 import ProfileAvatar from './ProfileAvatar'; // <-- Importando o filho!
+import { useNavigation } from '@react-navigation/native';
 
 export default function Header() {
+  const navigation = useNavigation();
   return (
     <View style={styles.headerContainer}>
       {/* Lado Esquerdo: Nome do App */}
@@ -11,11 +13,11 @@ export default function Header() {
       <View style={styles.rightActions}>
         <Text style={styles.bellIcon}>🔔</Text> {/* Ícone de notificação */}
         
-        {/* Usando o componente Filho aqui dentro! */}
+        
         <ProfileAvatar 
           isLogged={true} 
           initials="LL" 
-          onPress={() => console.log("Abriu o perfil!")} 
+          onPress={() => navigation.navigate('AdminDashboard')} 
         />
       </View>
     </View>
