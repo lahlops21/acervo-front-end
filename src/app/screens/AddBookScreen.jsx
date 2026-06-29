@@ -1,29 +1,38 @@
 // screens/AddBookScreen.jsx
 import React, { useState } from 'react';
 import { 
-  View, Text, StyleSheet, ScrollView, TouchableOpacity, 
-  SafeAreaView, Alert 
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import CustomInput from '../components/CustomInput';
-import Tag from '../components/Tag'; // Reutilizando o componente!
+import Tag from '../components/Tag'; 
 import { maskISBN} from '../utils/masks';
+import { cadastrarLivro,  atualizarLivro } from '../services/livroService';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function AddBookScreen() {
+export default function AddBookScreen() { 
+  
   const navigation = useNavigation();
+  const route = useRoute();
 
-  // Estados dos formulários
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [isbn, setIsbn] = useState('');
-  const [year, setYear] = useState('');
-  const [copies, setCopies] = useState(1);
-  const [synopsis, setSynopsis] = useState('');
+  // 👈 Detecta se um livro foi passado por parâmetro (modo edição)
+  const livroParaEditar = route.params?.bookData;
+  const isEditing = !!livroParaEditar;
+
+
+  // Estados dos formulários com valores iniciais dinâmicos
+  const [title, setTitle] = useState(livroParaEditar?.titulo || '');
+  const [author, setAuthor] = useState(livroParaEditar?.nomesAutores ? livroParaEditar.nomesAutores.join(', ') : '');
+  const [isbn, setIsbn] = useState(livroParaEditar?.isbn || '');
+  const [year, setYear] = useState(livroParaEditar?.anoPublicacao || '');
+  const [copies, setCopies] = useState(livroParaEditar?.quantidadeExemplares || 1);
+  const [synopsis, setSynopsis] = useState(livroParaEditar?.sinopse || '');
   const [menuAberto, setMenuAberto] = useState(false);
+  const [emoji, setEmoji] = useState('📖');
   
   // Estado das Categorias Selecionadas
-  const [selectedCategories, setSelectedCategories] = useState(['Fantasia', 'Clássico']); // Iniciando com as do seu mock
+ const [selectedCategories, setSelectedCategories] = useState(livroParaEditar?.categorias || ['Fantasia', 'Clássico']);
 
   // Lista global de categorias do seu sistema
   const todasCategorias = ['Fantasia', 'Clássico', 'Romance', 'Ficção', 'Aventura', 'Infantil', 'Biografia', 'Drama'];
@@ -38,20 +47,83 @@ export default function AddBookScreen() {
     setSelectedCategories(selectedCategories.filter(cat => cat !== categoria));
   };
 
-  const handleSave = () => {
-    // Simulação do disparo de sucesso/erro ao conectar com o banco em Java
-    if (!title || !author || !isbn) {
-      Alert.alert("Erro ao cadastrar", "Por favor, preencha todos os campos obrigatórios (*)");
+  //  MÉTODO DE SALVAR (CADASTRO E EDIÇÃO)
+  const handleSave = async () => {
+    if (!title.trim()) {
+      Alert.alert("Atenção", "Preencha o título do livro.");
       return;
     }
 
-    Alert.alert(
-      "Sucesso!", 
-      "O livro foi cadastrado com sucesso no banco de dados do Acervo.me!",
-      [{ text: "OK", onPress: () => navigation.goBack() }]
-    );
-  };
+     try {
+      if (isEditing) {
+        // 👈 MONTAGEM DO PAYLOAD DE ATUALIZAÇÃO CORRIGIDA:
+        const dadosAtualizacao = {
+          id: livroParaEditar.idLivro, // ID @NotNull exigido pelo Java
+          titulo: title,
+          editora: livroParaEditar.editora || "Editora Padrão",
+          anoPublicacao: year,
+          sinopse: synopsis || "Sem sinopse disponível.",
+          urlCapa: null,
+          
+          // 👈 Envia o autor mapeado dentro da estrutura do record DadosAutorInput
+          autores: [
+            {
+              nome: author // O back-end vai ler esse nome e aplicar sua regra de criar se não existir!
+            }
+          ],
+          
+          // 👈 Envia o array de strings de categorias selecionadas nas Tags da tela!
+          categorias: selectedCategories 
+        };
 
+        console.log("[TESTE] Enviando dados para ATUALIZAÇÃO COMPLETA:", dadosAtualizacao);
+
+        const response = await atualizarLivro(dadosAtualizacao);
+
+        if (response.status === 200) {
+          Alert.alert(
+            "Sucesso!", 
+            "O livro, autores e categorias foram atualizados com sucesso!", 
+            [{ text: "OK", onPress: () => navigation.goBack() }]
+          );
+        }
+
+      } else {
+        // MODO CADASTRO ORIGINAL (Cadastra o exemplar físico)
+        if (!author.trim()) {
+          Alert.alert("Atenção", "Preencha o campo de Autor para novos cadastros.");
+          return;
+        }
+
+        const dadosCadastro = {
+          tombo: "TOMBO-" + Math.floor(Math.random() * 10000),
+          isbn: isbn,
+          titulo: title,
+          editora: "Editora Padrão",
+          anoPublicacao: year,
+          sinopse: synopsis || "Sem sinopse disponível.",
+          urlCapa: null,
+          autores: [{ nome: author }]
+        };
+
+        console.log("[TESTE] Enviando dados para NOVO CADASTRO:", dadosCadastro);
+
+        const response = await cadastrarLivro(dadosCadastro);
+
+        if (response.status === 201 || response.status === 200) {
+          Alert.alert(
+            "Sucesso!", 
+            "O livro foi cadastrado com sucesso no banco de dados do Acervo.me!", 
+            [{ text: "OK", onPress: () => navigation.goBack() }]
+          );
+        }
+      }
+    } catch (error) {
+      console.log("Erro completo do Axios:", error.response?.data || error.message);
+      Alert.alert("Erro", "Não foi possível processar a operação. Verifique o console do Spring Boot!");
+    }
+  };
+  // O return agora está perfeitamente DENTRO do AddBookScreen!
   return (
     <SafeAreaView style={styles.container}>
       {/* HEADER DA TELA */}
@@ -60,7 +132,7 @@ export default function AddBookScreen() {
           <Ionicons name="arrow-back" size={20} color="#1E293B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Cadastrar Livro</Text>
-        <View style={{ width: 40 }} /> {/* Espaçador para centralizar o título */}
+        <View style={{ width: 40 }} /> 
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>

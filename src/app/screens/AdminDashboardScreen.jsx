@@ -85,7 +85,7 @@ export default function AdminDashboardScreen() {
     iconFamily="Material"
     iconColor="#475569"
     iconBgColor="#F1F5F9"
-    onPress={() => console.log('Navegar para acervo')}
+    onPress={() => navigation.navigate('ManageCollection')}
   />
 
   <QuickAction
@@ -103,7 +103,7 @@ export default function AdminDashboardScreen() {
     iconName="clipboard-outline"
     iconColor="#065F46"
     iconBgColor="#D1FAE5"
-    onPress={() => console.log('Navegar para lista')}
+    onPress={() => navigation.navigate('LoansList')}
   />
 </View>
           
